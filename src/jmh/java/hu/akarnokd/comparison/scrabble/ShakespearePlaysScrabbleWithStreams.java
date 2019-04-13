@@ -49,7 +49,7 @@ public abstract class ShakespearePlaysScrabbleWithStreams extends ShakespearePla
 
     @SuppressWarnings("unused")
 //    @Benchmark
-    @BenchmarkMode(Mode.SampleTime)
+    @BenchmarkMode({Mode.SampleTime, Mode.Throughput})
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     @Warmup(
         iterations = 5, time = 1

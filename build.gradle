@@ -8,7 +8,7 @@ buildscript {
 
     dependencies {
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.9.0'
-        classpath "me.champeau.gradle:jmh-gradle-plugin:0.4.5"
+        classpath "me.champeau.gradle:jmh-gradle-plugin:0.4.8"
     }
 }
 
@@ -32,7 +32,7 @@ if (!hasProperty('mainClass')) {
 
 
 
-apply from: file('gradle/maven.gradle')
+//apply from: file('gradle/maven.gradle')
 
 repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -191,8 +191,10 @@ apply from: file('gradle/license.gradle')
 
 jmh {
     jmhVersion = '1.21'
-    humanOutputFile = null
-    includeTests = false
+
+    resultFormat = 'JSON' // Result format type (one of CSV, JSON, NONE, SCSV, TEXT)
+    humanOutputFile = project.file("${project.buildDir}/reports/jmh/human.txt") // human-readable output file
+    resultsFile = project.file("${project.buildDir}/reports/jmh/results.txt")
     
     // For Epsilon GC, add: "-Xmx12G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseEpsilonGC"
     // For Shenandoah, add: "-XX:+UseShenandoahGC" [optionally "-XX:+UnlockDiagnosticVMOptions", "-XX:ShenandoahGCHeuristics=passive"]
@@ -203,12 +205,15 @@ jmh {
     jvmArgsAppend = ["-Djmh.separateClasspathJAR=true", "-XX:+UseParallelGC"]
     // ---------------------------------------------------------------------------------------
     
-    if (project.hasProperty('jmh')) {
-        include = ".*" + project.jmh + ".*"
+//    if (project.hasProperty('jmh')) {
+        include = ['.*\\.ShakespearePlaysScrabbleWith(NonParallelStreams|ParallelStreams|Streams|Reactor).*']
         println(include)
-    } else {
-        include = ".*"
-    }
+//    } else {
+//        include = ".*"
+//    }
+
+    profilers = ['gc']
+    duplicateClassesStrategy = 'warn' // Strategy to apply when encountring duplicate
     
     //jvmArgs = '-XX:MaxInlineLevel=20' use @Fork attribute
 }
