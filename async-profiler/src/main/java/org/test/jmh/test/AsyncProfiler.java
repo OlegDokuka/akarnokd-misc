@@ -51,7 +51,7 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
     public AsyncProfiler(String initLine) throws ProfilerException {
         OptionParser parser = new OptionParser();
         OptionSpec<String> outputDir = parser.accepts("dir", "Output directory").withRequiredArg().describedAs("directory").ofType(String.class);
-        OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu", "alloc");
+        OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu");
         OptionSpec<Boolean> debugNonSafepoints = parser.accepts("debugNonSafepoints").withRequiredArg().ofType(Boolean.class).defaultsTo(true, false);
         OptionSpec<Long> framebuf = parser.accepts("framebuf", "Size of profiler framebuffer").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_FRAMEBUF);
         OptionSpec<Long> interval = parser.accepts("interval", "Profiling interval, in nanoseconds").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_INTERVAL);
@@ -168,7 +168,9 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
                 }
 
                 Path collapsedPath = outputDir.resolve("collapsed-" + event.toLowerCase() + ".txt");
-                profilerCommand(String.format("stop,file=%s,collapsed,flat", collapsedPath));
+                profilerCommand(String.format("stop,file=%s,collapsed", collapsedPath));
+                Path flatPath = outputDir.resolve("flat-" + event.toLowerCase() + ".txt");
+                profilerCommand(String.format("stop,file=%s,flat", flatPath));
                 generated.add(collapsedPath);
                 Path collapsedProcessedPath = collapsedPath;
                 if (simpleName) {
