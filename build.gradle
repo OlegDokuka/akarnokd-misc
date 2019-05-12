@@ -52,6 +52,7 @@ apply plugin: 'osgi'
 
 dependencies {
     api 'org.reactivestreams:reactive-streams:1.0.2'
+    api project(":async-profiler")
 
     compile 'io.reactivex:rxjava:1.+'
     compile 'io.reactivex:rxjava-string:+'
@@ -151,6 +152,7 @@ dependencies {
     testCompile "org.reactivestreams:reactive-streams-tck:1.0.2"
 
     jmh configurations.api
+    jmh project(":async-profiler")
 }
 
 processResources {
@@ -193,8 +195,8 @@ jmh {
     jmhVersion = '1.21'
 
     resultFormat = 'JSON' // Result format type (one of CSV, JSON, NONE, SCSV, TEXT)
-    humanOutputFile = project.file("${project.buildDir}/reports/jmh/human.txt") // human-readable output file
-    resultsFile = project.file("${project.buildDir}/reports/jmh/results.txt")
+//    humanOutputFile = project.file("${project.buildDir}/reports/jmh/human.txt") // human-readable output file
+    resultsFile = project.file("${project.buildDir}/reports/jmh/results.json")
     
     // For Epsilon GC, add: "-Xmx12G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseEpsilonGC"
     // For Shenandoah, add: "-XX:+UseShenandoahGC" [optionally "-XX:+UnlockDiagnosticVMOptions", "-XX:ShenandoahGCHeuristics=passive"]
@@ -202,17 +204,19 @@ jmh {
     // For G1 GC, add: "-XX:+UseG1GC"
     // For ZGC, add: "-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC"
     // ---------------------------------------------------------------------------------------
-    jvmArgsAppend = ["-Djmh.separateClasspathJAR=true", "-XX:+UseParallelGC"]
+//    jvmArgsPrepend = ["-Dreactor.bufferSize.x=64"]
+    jvmArgsAppend = ["-Djmh.separateClasspathJAR=true"]
     // ---------------------------------------------------------------------------------------
-    
-//    if (project.hasProperty('jmh')) {
-        include = ['.*\\.ShakespearePlaysScrabbleWith(NonParallelStreams|ParallelStreams|Streams|Reactor).*']
-        println(include)
-//    } else {
-//        include = ".*"
-//    }
 
-    profilers = ['gc']
+//    include = ['.*\\.ShakespearePlaysScrabbleWith(Reactor).*']
+    include = ['.*\\.ShakespearePlaysScrabbleWithReactor3Opt.*', '.*\\.ShakespearePlaysScrabbleWithStreamsBeta.*', '.*\\.ShakespearePlaysScrabbleWithDirect.*']
+    warmup = '180s'
+    warmupIterations = 5
+    iterations = 10
+    timeOnIteration = '10s'
+    fork = 2
+
+    profilers = ['gc', 'org.test.jmh.test.AsyncProfiler']
     duplicateClassesStrategy = 'warn' // Strategy to apply when encountring duplicate
     
     //jvmArgs = '-XX:MaxInlineLevel=20' use @Fork attribute
