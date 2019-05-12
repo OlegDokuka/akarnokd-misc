@@ -33,7 +33,7 @@ public class ShakespearePlaysScrabbleWithDirect extends ShakespearePlaysScrabble
 
     @SuppressWarnings("unused")
     @Benchmark
-    @BenchmarkMode(Mode.SampleTime)
+    @BenchmarkMode(Mode.Throughput)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     @Warmup(
         iterations = 5, time = 1

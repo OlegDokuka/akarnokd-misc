@@ -209,7 +209,7 @@ jmh {
     // ---------------------------------------------------------------------------------------
 
 //    include = ['.*\\.ShakespearePlaysScrabbleWith(Reactor).*']
-    include = ['.*\\.ShakespearePlaysScrabbleWithReactor3Opt.*', '.*\\.ShakespearePlaysScrabbleWithStreamsBeta.*', '.*\\.ShakespearePlaysScrabbleWithDirect.*']
+    include = ['.*\\.ShakespearePlaysScrabbleWithReactor3Opt.*', '.*\\.ShakespearePlaysScrabbleWithNonParallelStreamsBeta.*', '.*\\.ShakespearePlaysScrabbleWithDirect.*']
     warmup = '180s'
     warmupIterations = 5
     iterations = 10

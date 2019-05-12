@@ -51,12 +51,12 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
     public AsyncProfiler(String initLine) throws ProfilerException {
         OptionParser parser = new OptionParser();
         OptionSpec<String> outputDir = parser.accepts("dir", "Output directory").withRequiredArg().describedAs("directory").ofType(String.class);
-        OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu,alloc");
+        OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu", "alloc");
         OptionSpec<Boolean> debugNonSafepoints = parser.accepts("debugNonSafepoints").withRequiredArg().ofType(Boolean.class).defaultsTo(true, false);
         OptionSpec<Long> framebuf = parser.accepts("framebuf", "Size of profiler framebuffer").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_FRAMEBUF);
         OptionSpec<Long> interval = parser.accepts("interval", "Profiling interval, in nanoseconds").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_INTERVAL);
         OptionSpec<Boolean> threads = parser.accepts("threads", "Profile threads separately").withRequiredArg().ofType(Boolean.class).defaultsTo(false,true);
-        OptionSpec<Boolean> verbose = parser.accepts("verbose", "Output the sequence of commands").withRequiredArg().ofType(Boolean.class).defaultsTo(false);
+        OptionSpec<Boolean> verbose = parser.accepts("verbose", "Output the sequence of commands").withRequiredArg().ofType(Boolean.class).defaultsTo(true);
         OptionSpec<String> flameGraphOpts = parser.accepts("flameGraphOpts", "Options passed to FlameGraph.pl").withRequiredArg().withValuesSeparatedBy(',').ofType(String.class);
         OptionSpec<Directions> flameGraphDirection = parser.accepts("flameGraphDirection", "Directions to generate flamegraphs").withRequiredArg().ofType(Directions.class).defaultsTo(Directions.values());
         OptionSpec<String> flameGraphDir = ProfilerUtils.addFlameGraphDirOption(parser);
